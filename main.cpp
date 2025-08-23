@@ -1,6 +1,8 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include <iostream>
+#include <string>
 #include <vector>
+#include <algorithm>
+using namespace std;
 
 // helper function for addition
 string intAddition(string a, string b, int base) {
