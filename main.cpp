@@ -7,7 +7,8 @@ using namespace std;
 // helper function for addition
 string intAddition(string a, string b, int base) {
     vector<int> va;
-    vector<int> vb;    
+    vector<int> vb;
+    // converted from strings to int vectors correctly
     transform(a.begin(), a.end(), back_inserter(va), [](char c) { return c - '0'; });
     transform(b.begin(), b.end(), back_inserter(vb), [](char c) { return c - '0'; });
     int digitA;
@@ -17,9 +18,9 @@ string intAddition(string a, string b, int base) {
     int temp = 0;
     int lenA = va.size();
     int lenB = vb.size();
-    while (lenA > 0 || lenB > 0 || carry == 1) { // or digitA and digitB
-        digitA = va.back();
-        digitB = vb.back();
+    while (lenA > 0 || lenB > 0 || carry == 1) {    // or digitA and digitB
+        digitA = (lenA > 0) ? va.back() : 0;        // IMPORTANT to check if either va or vb is empty!! 
+        digitB = (lenB > 0) ? vb.back() : 0;        // IMPORTANT to check if either va or vb is empty!!
         temp = digitA + digitB + carry;
         if (temp >= base) {
             carry = 1;
@@ -28,10 +29,10 @@ string intAddition(string a, string b, int base) {
             carry = 0;            
         }
         result.push_back(temp);
-        va.pop_back();
-        vb.pop_back();
+        if (lenA > 0) va.pop_back();                // IMPORTANT to check lenA and lenB before pop_back()!!
+        if (lenB > 0) vb.pop_back();                // IMPORTANT to check lenA and lenB before pop_back()!!
         lenA = va.size();
-        lenB = vb.size();        
+        lenB = vb.size();
     }
     std::reverse(result.begin(), result.end());
     string s;
