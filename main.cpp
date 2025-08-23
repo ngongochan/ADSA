@@ -25,19 +25,21 @@ int intAddition(int a, int b, int base) {
             a = (a - digitA)/10;
             b = (b - digitB)/10;
         }
+        return sum;
     }
 
+
     // base 2
-    return sum;
 }
 
 
-int intMultiplication(int a, int b, int base) {
+// int intMultiplication(int a, int b, int base) {
 
-    return product;
-}
+//     return product;
+// }
 
 void calculate(int a, int b, int base) {
+    int sum = intAddition(a, b, base);
     std::cout << sum << " 0" << " 0";
 }
 
