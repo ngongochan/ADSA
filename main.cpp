@@ -38,7 +38,7 @@ void calculate(int a, int b, int base) {
 }
 
 int main() {
-    int a, b, base;
-    std::cin >> a >> b >> base;
-    calculate(a, b, base);
+    // int a, b, base;
+    // std::cin >> a >> b >> base;
+    // calculate(a, b, base);
 }
