@@ -37,9 +37,8 @@ void calculate(int a, int b, int base) {
     std::cout << sum << " 0" << " 0" << std::endl;
 }
 
-// int main() {
-//     calculate(456, 123, 7);      // output: 612
-//     calculate(101, 5, 10);       // output: 106 505 20
-//     calculate(10, 111, 2);       // output: 1001 1110 0
-//     calculate(111, 10, 2);       // output: 1001 1110 11
-// }
+int main() {
+    int a, b, base;
+    std::cin >> a >> b >> base;
+    calculate(a, b, base);
+}
