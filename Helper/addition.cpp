@@ -24,8 +24,6 @@ int intAddition(int a, int b) {
     int carry = 0;
     int sum = 0;
     int temp = 0;
-
-    // infinite loop
     while (a > 0 || b > 0 || carry == 1) { // or digitA and digitB
         digitA = a % 10;
         digitB = b % 10;
