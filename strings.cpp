@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-string intAddition(string a, string b, int base) {
+string calculate(string a, string b, int base) {
     int lenA = a.length();
     int lenB = b.length();
     if(lenA < lenB) {
@@ -24,22 +24,9 @@ string intAddition(string a, string b, int base) {
     return str;
 }
 
-// int intSubtraction(string a, string b, int base) {
-
-// }
-
-
-// string intMultiplication(string a, string b, int base) {
-//     vector<int> va = toVector(a);
-//     vector<int> vb = toVector(b);
-
-//     string s = toString(result);
-//     return s;
-// }
-
 int main() {
     string a, b;
     int base;
     cin >> a >> b >> base;
-    cout << intAddition(a, b, base) << " 0" << " 0" << endl;
+    cout << calculate(a, b, base) << endl;
 }
