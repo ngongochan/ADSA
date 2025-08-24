@@ -1,92 +1,133 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-string intAddition(string a, string b, int base) {
-    int lenA = a.length();
-    int lenB = b.length();
-    if(lenA < lenB) {
-        swap(a, b);
-        swap(lenA, lenB);
-    }
-    for (int i = 0; i < lenA - lenB; i++) {
-        b = "0" + b;
-    }
-    int carry = 0;
-    string str = "";
-    for (int i = lenA-1; i >= 0; i--) {
-        int sum = (a[i]-'0') + (b[i]-'0') + carry;
-        carry = sum / base;
-        sum = sum % base;
-        str = to_string(sum) + str;
-    }
-    if (carry > 0) str = to_string(carry) + str;
-    return str;
+// Utility to trim leading zeros
+string trimLeadingZeros(string s) {
+    while (s.size() > 1 && s[0] == '0')
+        s.erase(0, 1);
+    return s;
 }
 
+// Adds two strings representing numbers in the given base
+string intAddition(string a, string b, int base) {
+    int lenA = a.length(), lenB = b.length();
+    if (lenA < lenB) swap(a, b), swap(lenA, lenB);
+    while (b.length() < a.length()) b = "0" + b;
+
+    int carry = 0;
+    string result = "";
+    for (int i = lenA - 1; i >= 0; i--) {
+        int sum = (a[i] - '0') + (b[i] - '0') + carry;
+        carry = sum / base;
+        result = to_string(sum % base) + result;
+    }
+    if (carry) result = to_string(carry) + result;
+    return result;
+}
+
+// Subtracts b from a in the given base, assumes a >= b
 string intSubtraction(string a, string b, int base) {
-    int lenA = a.length();
-    int lenB = b.length();
+    int lenA = a.length(), lenB = b.length();
     bool negative = false;
-    if(lenA < lenB || (lenA == lenB && a < b)) {    // IMPORTANT: a < b means lexicographical string comparison in C++ ('0' < '9')
+    if (lenA < lenB || (lenA == lenB && a < b)) {
         swap(a, b);
         swap(lenA, lenB);
         negative = true;
     }
-    for (int i = 0; i < lenA - lenB; i++) {
-        b = "0" + b;
-    }
+    while (b.length() < a.length()) b = "0" + b;
+
     int borrow = 0;
-    string str = "";
-    for (int i = lenA-1; i >= 0; i--) {
-        int diff = (a[i]-'0') - (b[i]-'0') - borrow;
+    string result = "";
+    for (int i = lenA - 1; i >= 0; i--) {
+        int diff = (a[i] - '0') - (b[i] - '0') - borrow;
         if (diff < 0) {
             diff += base;
             borrow = 1;
         } else {
             borrow = 0;
         }
-        str = to_string(diff) + str;
+        result = to_string(diff) + result;
     }
-    if(negative == true) str = "-" + str;
-    return str;
-}
 
-string intMultiplication(string a, string b, int base) {
-    int lenA = a.length();
-    int lenB = b.length();
-    if(lenA == 1 && lenB == 1) {  // base case
-        int shortResult = (a[0]-'0') * (b[0]-'0');
-        return to_string(shortResult);
-    }
-    if(lenA < lenB || (lenA == lenB && a < b)) {    // IMPORTANT: a < b means lexicographical string comparison in C++ ('0' < '9')
-        swap(a, b);
-    }
-    string product;
-    int n = std::max(lenA, lenB);
-    if (n % 2 != 0) n++;
-    while (a.length() < n) a = "0" + a; // why < not <= ?
-    while (b.length() < n) b = "0" + b;
-    string Al = a.substr(0, n/2);
-    string Ar = a.substr(n/2);    
-    string Bl = b.substr(0, n/2);
-    string Br = b.substr(n/2);    
-    // 100*a*c + 10*((a+b)*(c+d) - a*c - b*d) + b*d
-    // 100*Al*Bl + 10*((Al+Ar)*(Bl+Br) - Al*Bl - Ar*Br) + Ar*Br
-    string AlBl = intMultiplication(Al, Bl, base);
-    string ArBr = intMultiplication(Ar, Br, base);
-    string sum1  = intAddition(Al, Ar, base);
-    string sum2  = intAddition(Bl, Br, base);
-    string Sum   = intMultiplication(sum1, sum2, base);
-    string Sub = intSubtraction(intSubtraction(Sum, AlBl, base), ArBr, base);
-    string part1 = AlBl + string(n, '0');      // * base^n
-    string part2 = Sub + string(n/2, '0');     // * base^(n/2)
-    string result = intAddition(intAddition(part1, part2, base), ArBr, base);
+    result = trimLeadingZeros(result);
+    if (negative) result = "-" + result;
     return result;
 }
 
+// Multiply two single-digit characters in the given base
+string multiplySingleDigits(char a, char b, int base) {
+    int result = (a - '0') * (b - '0');
+    string res = "";
+    do {
+        res = to_string(result % base) + res;
+        result /= base;
+    } while (result > 0);
+    return res;
+}
+
+// Naive multiplication for small strings
+string naiveMultiplication(string a, string b, int base) {
+    string result = "0";
+    int lenB = b.length();
+    for (int i = lenB - 1; i >= 0; i--) {
+        string temp = "";
+        int carry = 0;
+        for (int j = a.length() - 1; j >= 0; j--) {
+            int mul = (a[j] - '0') * (b[i] - '0') + carry;
+            carry = mul / base;
+            temp = to_string(mul % base) + temp;
+        }
+        if (carry) temp = to_string(carry) + temp;
+        temp += string(lenB - 1 - i, '0');
+        result = intAddition(result, temp, base);
+    }
+    return trimLeadingZeros(result);
+}
+
+// Karatsuba multiplication with recursion depth control
+string intMultiplication(string a, string b, int base) {
+    a = trimLeadingZeros(a);
+    b = trimLeadingZeros(b);
+    int lenA = a.length(), lenB = b.length();
+
+    // Cutoff to naive multiplication for small inputs
+    if (lenA <= 4 || lenB <= 4) {
+        return naiveMultiplication(a, b, base);
+    }
+
+    // Make lengths equal
+    int n = max(lenA, lenB);
+    if (n % 2 != 0) n++;
+    while (a.length() < n) a = "0" + a;
+    while (b.length() < n) b = "0" + b;
+
+    string Al = a.substr(0, n / 2);
+    string Ar = a.substr(n / 2);
+    string Bl = b.substr(0, n / 2);
+    string Br = b.substr(n / 2);
+
+    string AlBl = intMultiplication(Al, Bl, base);
+    string ArBr = intMultiplication(Ar, Br, base);
+    string AlPlusAr = intAddition(Al, Ar, base);
+    string BlPlusBr = intAddition(Bl, Br, base);
+    string sumProduct = intMultiplication(AlPlusAr, BlPlusBr, base);
+
+    string middleTerm = intSubtraction(intSubtraction(sumProduct, AlBl, base), ArBr, base);
+
+    string part1 = AlBl + string(n, '0');           // AlBl * base^n
+    string part2 = middleTerm + string(n / 2, '0'); // middleTerm * base^(n/2)
+
+    string result = intAddition(intAddition(part1, part2, base), ArBr, base);
+    return trimLeadingZeros(result);
+}
+
+// Main
 int main() {
     string a, b;
     int base;
     cin >> a >> b >> base;
-    cout << intAddition(a, b, base) << " " << intSubtraction(a, b, base) << " " << intMultiplication(a, b, base) << " 0" << endl;
+
+    cout << intAddition(a, b, base) << " " << intMultiplication(a, b, base) << " 0" << endl;
+
+    return 0;
 }
