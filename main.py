@@ -3,7 +3,7 @@ class Node:
         self.value = value
         self.left = None
         self.right = None
-        self.height = 1   # leaf node starts with height 1
+        self.height = 1 # leaf node starts with height 1
 
 class AVLTree:
     def __init__(self):
@@ -70,18 +70,17 @@ class AVLTree:
             node.left = self.insert(node.left, value)
         elif value > node.value:
             node.right = self.insert(node.right, value)
-        else:
+        else: # handle duplicates
             return node
         node.height = 1 + max(self.get_height(node.left), self.get_height(node.right))
         return self.rebalance(node)
-
 
     def insert_value(self, value):
         self.root = self.insert(self.root, value)
 
     def delete(self, node, value):
         if not node:
-            return node  # value not found, do nothing
+            return node # value not found, do nothing
         # BST deletion
         if value < node.value:
             node.left = self.delete(node.left, value)
@@ -109,18 +108,6 @@ class AVLTree:
     def delete_value(self, value):
         self.root = self.delete(self.root, value)
 
-    def traverse(self, order):
-        if self.root == None:
-            print("EMPTY")
-        if order == "PRE":
-            self.preorder(self.root)
-        elif order == "IN":
-            self.inorder(self.root)
-        elif order == "POST":
-            self.postorder(self.root)
-        else:
-            print("invalid")
-
     def inorder(self, node):
         if node == None:
             return
@@ -142,8 +129,19 @@ class AVLTree:
         self.postorder(node.right)
         print(node.value, end=' ')
 
+    def traverse(self, order):
+        if self.root == None:
+            print("EMPTY")
+        if order == "PRE":
+            self.preorder(self.root)
+        elif order == "IN":
+            self.inorder(self.root)
+        elif order == "POST":
+            self.postorder(self.root)
+        else:
+            print("INVALID")
+
 if __name__ == "__main__":
-    import sys
     avl = AVLTree()
     moves = input().split()
     for move in moves:
