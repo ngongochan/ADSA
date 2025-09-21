@@ -21,6 +21,12 @@ class AVLTree:
         else:
             return 0
 
+    def get_max(self, node):
+        current = node
+        while current.right:
+            current = current.right
+        return current
+
     def rebalance(self, node):
         balance = self.get_balance(node)
         # LL
@@ -133,13 +139,10 @@ class AVLTree:
         self.postorder(node.right)
         print(node.value)
 
-def enter_moves():
-    return input("How do you want to modify the AVL tree?").split()
-
 if __name__ == "__main__":
+    import sys
     avl = AVLTree()
-    moves = enter_moves()
-    # print(moves)
+    moves = input().split()
     for move in moves:
         if move[0] == "A":
             value = int(move[1:])
@@ -148,4 +151,4 @@ if __name__ == "__main__":
             value = int(move[1:])
             avl.delete_value(value)
         else:
-            print(avl.traverse(move))
+            avl.traverse(move)
