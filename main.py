@@ -68,10 +68,13 @@ class AVLTree:
             return Node(value)
         if value < node.value:
             node.left = self.insert(node.left, value)
-        else:
+        elif value > node.value:
             node.right = self.insert(node.right, value)
+        else:
+            return node
         node.height = 1 + max(self.get_height(node.left), self.get_height(node.right))
         return self.rebalance(node)
+
 
     def insert_value(self, value):
         self.root = self.insert(self.root, value)
@@ -120,7 +123,6 @@ class AVLTree:
 
     def inorder(self, node):
         if node == None:
-            # print("EMPTY")
             return
         self.inorder(node.left)
         print(node.value, end=' ')
@@ -128,7 +130,6 @@ class AVLTree:
 
     def preorder(self, node):
         if node == None:
-            # print("EMPTY")
             return
         print(node.value, end=' ')
         self.preorder(node.left)
@@ -136,7 +137,6 @@ class AVLTree:
         
     def postorder(self, node):
         if node == None:
-            # print("EMPTY")
             return
         self.postorder(node.left)
         self.postorder(node.right)
