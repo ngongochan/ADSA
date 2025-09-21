@@ -66,7 +66,6 @@ class AVLTree:
     def insert(self, node, value):
         if not node:
             return Node(value)
-
         if value < node.value:
             node.left = self.insert(node.left, value)
         else:
@@ -80,7 +79,6 @@ class AVLTree:
     def delete(self, node, value):
         if not node:
             return node  # value not found, do nothing
-
         # BST deletion
         if value < node.value:
             node.left = self.delete(node.left, value)
@@ -109,6 +107,8 @@ class AVLTree:
         self.root = self.delete(self.root, value)
 
     def traverse(self, order):
+        if self.root == None:
+            print("EMPTY")
         if order == "PRE":
             self.preorder(self.root)
         elif order == "IN":
@@ -120,7 +120,7 @@ class AVLTree:
 
     def inorder(self, node):
         if node == None:
-            print("EMPTY")
+            # print("EMPTY")
             return
         self.inorder(node.left)
         print(node.value, end=' ')
@@ -128,7 +128,7 @@ class AVLTree:
 
     def preorder(self, node):
         if node == None:
-            print("EMPTY")
+            # print("EMPTY")
             return
         print(node.value, end=' ')
         self.preorder(node.left)
@@ -136,7 +136,7 @@ class AVLTree:
         
     def postorder(self, node):
         if node == None:
-            print("EMPTY")
+            # print("EMPTY")
             return
         self.postorder(node.left)
         self.postorder(node.right)
