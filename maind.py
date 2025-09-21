@@ -1,12 +1,20 @@
 class Node:
-    def __init__(self, value = 0, left = None, right = None):
+    def __init__(self, value = 0):
         self.value = value
         self.right = right
         self.left = left
+        self.height = 1
 
 class AVLTree:
     def __init__(self, root = None):
         self.root = root
+
+    def height(self, node):
+        # if node exits, return its height, which is 1
+        if node:
+            return node.height
+        else:
+            return 0
 
     def search(self, target, node=None):
         if node == None:
@@ -18,13 +26,43 @@ class AVLTree:
         else:
             return self.search(target, node.left)
 
-    # def search(self, root, target):
-    #     if(root.value == target or root == None):
-    #         return root
-    #     if(target > root.value):
-    #         return self.search(root.right, target)
-    #     else:
-    #         return self.search(root.left, target)
+    def delete(self, target):
+        # root == None -> return (None)
+        # root.value == target
+            # leaf:
+                # root.left == None and root.right == None
+                # -> del root
+            # 1 child:
+                # root.left != None or root.right != None
+                    # if root.left:
+                        # temp = root.left
+                        # del root.left
+                    # else:
+                        # temp = root.right
+                        # del root.right
+                    # root = temp
+            # 2 children:
+                # root.left != None and root.right != None
+                    # temp = maxLeft(root)
+                    # root.value = temp.value
+                    # del temp
+
+
+                # def maxLeft(node):
+                #   if (node == None):
+                    #     return
+                    # current = node.left
+                    # while node.right:
+                    #     current = current.right
+                    # return current
+
+
+#         4
+#     2       8
+# 1      3 7      10
+
+
+
 
     def traverse(self, order):
         if order == "PRE":
