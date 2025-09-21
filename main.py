@@ -120,24 +120,27 @@ class AVLTree:
 
     def inorder(self, node):
         if node == None:
+            print("EMPTY")
             return
         self.inorder(node.left)
-        print(node.value)
+        print(node.value, end=' ')
         self.inorder(node.right)
 
     def preorder(self, node):
         if node == None:
+            print("EMPTY")
             return
-        print(node.value)
+        print(node.value, end=' ')
         self.preorder(node.left)
         self.preorder(node.right)
         
     def postorder(self, node):
         if node == None:
+            print("EMPTY")
             return
         self.postorder(node.left)
         self.postorder(node.right)
-        print(node.value)
+        print(node.value, end=' ')
 
 if __name__ == "__main__":
     import sys
