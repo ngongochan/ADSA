@@ -67,7 +67,7 @@ class HashTable:
 
 if __name__ == "__main__":
     ht = HashTable()
-    moves = input("Enter moves: ").split()
+    moves = input().split()
 
     for move in moves:
         action = move[0]
