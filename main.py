@@ -1,81 +1,76 @@
-class Slot:
-    def __init__(self):
-        self.value = None
-        self.status = "never used"
+class UnionFind:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+    
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+    
+    def union(self, x, y):
+        rootX = self.find(x)
+        rootY = self.find(y)
+        
+        if rootX != rootY:
+            if self.rank[rootX] > self.rank[rootY]:
+                self.parent[rootY] = rootX
+            elif self.rank[rootX] < self.rank[rootY]:
+                self.parent[rootX] = rootY
+            else:
+                self.parent[rootY] = rootX
+                self.rank[rootX] += 1
+            return True
+        return False
 
-class HashTable:
-    def __init__(self):
-        self.slots = [Slot() for _ in range(26)]
+def letter_to_cost(letter):
+    """converts a letter (A-Z, a-z) to its respective cost value"""
+    if 'A' <= letter <= 'Z':
+        return ord(letter) - ord('A')
+    return ord(letter) - ord('a') + 26
 
-    def search(self, word):
-        start_index = ord(word[-1]) - ord('a')
-        current_index = start_index
+def solve(n, country, build, destroy):
+    edges = []
+    
+    for i in range(n):
+        for j in range(i + 1, n):
+            if country[i][j] == '1':
+                destroy_cost = letter_to_cost(destroy[i][j])
+                edges.append((destroy_cost, i, j, 'destroy'))
+            else:
+                build_cost = letter_to_cost(build[i][j])
+                edges.append((build_cost, i, j, 'build'))
+    
+    edges.sort()
+    
+    uf = UnionFind(n)
+    total_cost = 0
+    for cost, u, v, _ in edges:
+        if uf.union(u, v):  # If u and v are not in the same component, connect them
+            total_cost += cost
+    
+    return total_cost
 
-        while True:
-            slot = self.slots[current_index]
-            if slot.value == word:
-                return True
-            if slot.status == "never used":
-                return False
-
-            current_index = (current_index + 1) % 26
-            if current_index == start_index:
-                return False
-
-    def insert(self, word):
-        if self.search(word):
-            return
-
-        index = ord(word[-1]) - ord('a')
-        start_index = index
-
-        while True:
-            slot = self.slots[index]
-            if slot.status in ("tombstone", "never used"):
-                slot.value = word
-                slot.status = "occupied"
-                return
-
-            index = (index + 1) % 26
-            if index == start_index:
-                return
-
-    def delete(self, word):
-        if not self.search(word):
-            return  # not found, nothing to do
-
-        index = ord(word[-1]) - ord("a")
-        start_index = index
-
-        while True:
-            slot = self.slots[index]
-
-            if slot.value == word:
-                slot.value = None
-                slot.status = "tombstone"
-                return
-
-            index = (index + 1) % 26
-            if index == start_index:
-                return
-                
-    def traverse(self):
-        for i, slot in enumerate(self.slots):
-            if (slot.status == "occupied"):
-                print(slot.value, end=" ")
-
+def main():
+    country = [
+        '000',
+        '000',
+        '000'
+    ]
+    build = [
+        'ABD',
+        'BAC',
+        'DCA'
+    ]
+    destroy = [
+        'ABD',
+        'BAC',
+        'DCA'
+    ]
+    n = 3
+    
+    result = solve(n, country, build, destroy)
+    print(result)
 
 if __name__ == "__main__":
-    ht = HashTable()
-    moves = input().split()
-
-    for move in moves:
-        action = move[0]
-        word = move[1:]
-
-        if action == "A":
-            ht.insert(word)
-        else:
-            ht.delete(word)
-
-    ht.traverse()
+    main()
